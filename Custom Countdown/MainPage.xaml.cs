@@ -291,13 +291,6 @@ namespace Custom_Countdown
         }
         #endregion
 
-        #region About button clicked
-        private void aboutBtn_Click_1(object sender, RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(AboutPage));
-        }
-        #endregion
-
         #region Settings button clicked
         private void settingsBtn_Click_1(object sender, RoutedEventArgs e)
         {

@@ -162,7 +162,7 @@ namespace Clock.WinRT
                 }
                 else
                 {
-                    tileXmlCountdown = string.Format(xml, timeLeft.Days.ToString() + " days until the baby");
+                    tileXmlCountdown = string.Format(xml, timeLeft.Days.ToString() + " days until the big event");
                 }
             }
             else if (Live_Tile_Style == 2)
@@ -181,7 +181,7 @@ namespace Clock.WinRT
                 }
                 else
                 {
-                    tileXmlCountdown = string.Format(xml, timeLeft.Days.ToString() + " days until the baby");
+                    tileXmlCountdown = string.Format(xml, timeLeft.Days.ToString() + " days until the big event");
                 }
             }
 
@@ -212,7 +212,7 @@ namespace Clock.WinRT
                         }
                         else
                         {
-                            tileXml = string.Format(xml, timeLeft.Days.ToString() + " days until the baby");
+                            tileXml = string.Format(xml, timeLeft.Days.ToString() + " days until the big event");
                         }
                     }
                     else if (Live_Tile_Style == 2)
@@ -232,7 +232,7 @@ namespace Clock.WinRT
                         }
                         else
                         {
-                            tileXml = string.Format(xml, timeLeft.Days.ToString() + " days until the baby");
+                            tileXml = string.Format(xml, timeLeft.Days.ToString() + " days until the big event");
                         }
                     }
 

@@ -19,21 +19,20 @@
         * Row 1 contains the rest of the page layout
     -->
     <Grid Style="{StaticResource LayoutRootStyle}">
-        <TextBlock x:Name="untilTxtBlock" Text="Until the baby!" TextWrapping="Wrap" FontSize="96" FontFamily="DilleniaUPC" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10,80,10,80"/>
+        <TextBlock x:Name="untilTxtBlock" Text="Until the big event!" TextWrapping="Wrap" FontSize="96" FontFamily="DilleniaUPC" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10,80,10,80"/>
         <TextBlock x:Name="countdownTxtBlock" TextWrapping="Wrap" FontSize="72" FontFamily="DilleniaUPC" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
 
         <StackPanel Orientation="Horizontal" Width="Auto" Height="100" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-            <Button x:Name="aboutBtn" Margin="8,0,8,0" BorderThickness="0" Style="{StaticResource HelpAppBarButtonStyle}" Click="aboutBtn_Click_1" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+            
             <Button x:Name="changeDateBtn" Style="{StaticResource CalendarAppBarButtonStyle}" Margin="8,14,8,0" BorderThickness="0" Foreground="White" Click="changeDateBtn_Click"/>
         </StackPanel>
-        <Popup x:Name="datePopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Center" Width="400" Height="570" Closed="datePopUp_Closed" Opened="datePopUp_Opened">
-            <Grid x:Name="grid" Height="570" Width="400" Background="White">
+        <Popup x:Name="datePopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="400" Height="Auto" Closed="datePopUp_Closed" Opened="datePopUp_Opened" Margin="0,230,0,0">
+            <Grid x:Name="grid"  Width="400" Background="White">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="120"/>
                     <RowDefinition Height="50"/>
-                    <RowDefinition Height="200"/>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="70"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
@@ -41,11 +40,11 @@
                     <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
 
-                <Image x:Name="bannerImage" Source="Assets/Graduation Countdown Text.png" Width="300" Height="150" Grid.Row="0" Grid.ColumnSpan="3" Margin="0,0,0,20"/>
+            
 
 
 
-                <StackPanel x:Name="stackPanel1" Orientation="Vertical" Grid.Row="1" Grid.Column="0" Width="100" HorizontalAlignment="left">
+                <StackPanel x:Name="stackPanel1" Orientation="Vertical" Grid.Row="0" Grid.Column="0" Width="100" HorizontalAlignment="left">
 
                     <ComboBox x:Name="monthComboBox" Height="35" VerticalAlignment="Top" Width="160" Margin="5,10,5,0" Foreground="Black" >
                         <x:String>January</x:String>
@@ -63,7 +62,7 @@
                     </ComboBox>
 
                 </StackPanel>
-                <StackPanel x:Name="stackPanel2" Orientation="Vertical" Grid.Row="1" Grid.Column="1" Width="100" HorizontalAlignment="Center">
+                <StackPanel x:Name="stackPanel2" Orientation="Vertical" Grid.Row="0" Grid.Column="1" Width="100" HorizontalAlignment="Center">
 
                     <ComboBox x:Name="dayComboBox" VerticalAlignment="Top" Foreground="Black" Width="100" Height="35" Margin="5,10,5,0">
                         <x:Int32>1</x:Int32>
@@ -100,7 +99,7 @@
                     </ComboBox>
                 </StackPanel>
 
-                <StackPanel x:Name="stackPanel3" Orientation="Vertical" Grid.Row="1" Grid.Column="2" Width="100" HorizontalAlignment="Right">
+                <StackPanel x:Name="stackPanel3" Orientation="Vertical" Grid.Row="0" Grid.Column="2" Width="100" HorizontalAlignment="Right">
 
                     <ComboBox x:Name="yearComboBox"  Width="100" Height="35"  Margin="5,10,5,0">
                         <x:Int32>2013</x:Int32>
@@ -115,11 +114,11 @@
                 </StackPanel>
 
                 
-                <StackPanel x:Name="stackPanel5" Orientation="Vertical" Grid.Row="2" Grid.Column="0" Width="200" HorizontalAlignment="Left" Grid.ColumnSpan="3">
+                <StackPanel x:Name="stackPanel5" Orientation="Vertical" Grid.Row="1" Grid.Column="0" Width="200" HorizontalAlignment="Left" Grid.ColumnSpan="3">
                     <TextBlock Text="Countdown name: " Margin="5,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" Foreground="Black"/>
                     <TextBox x:Name="countdownNameTxtBox" Width="230" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,5,0" Grid.Column="1" Grid.ColumnSpan="1"/>
                 </StackPanel>
-                <StackPanel x:Name="stackPanel" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="3" Grid.ColumnSpan="3">
+                <StackPanel x:Name="stackPanel" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="2" Grid.ColumnSpan="3">
                     <Button x:Name="saveDateBtn" Content="Save" BorderThickness="0" Foreground="Black" Background="White" Margin="10,0,0,10" VerticalAlignment="Bottom" Click="saveDateBtn_Click" Grid.Row="1"/>
                     <Button x:Name="cancelBtn" Content="Cancel" BorderThickness="0" Foreground="Black" Background="White" Margin="10,0,0,10" VerticalAlignment="Bottom" Click="cancelBtn_Click_1" Grid.Row="1"/>
                 </StackPanel>

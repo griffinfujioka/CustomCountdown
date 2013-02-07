@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="110eebd0-28fc-4f12-8b61-1cf8d2f9f565" Publisher="CN=Griffin" Version="1.0.0.0" />
+  <Identity Name="36726GriffinFujioka.CustomCountdown" Publisher="CN=7A2280AF-F3B0-499B-A221-E1F53BF165FF" Version="1.0.0.0" />
   <Properties>
     <DisplayName>Custom Countdown</DisplayName>
-    <PublisherDisplayName>Griffin</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <PublisherDisplayName>Griffin Fujioka</PublisherDisplayName>
+    <Logo>Assets\Custom CD Store Logo.png</Logo>
   </Properties>
   <Prerequisites>
     <OSMinVersion>6.2.1</OSMinVersion>
@@ -15,10 +15,10 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Custom_Countdown.App">
-      <VisualElements DisplayName="Custom Countdown" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="Custom Countdown" ForegroundText="dark" BackgroundColor="#464646">
-        <LockScreen Notification="badge" BadgeLogo="Assets\Badge.png" />
-        <DefaultTile ShowName="noLogos" />
-        <SplashScreen Image="Assets\SplashScreen.png" />
+      <VisualElements DisplayName="Custom Countdown" Logo="Assets\Custom CD Square Icon.png" SmallLogo="Assets\Custom CD Small Icon.png" Description="Custom Countdown" ForegroundText="light" BackgroundColor="#00CC99">
+        <LockScreen Notification="badge" BadgeLogo="Assets\Custom CD Badge.png" />
+        <DefaultTile ShowName="allLogos" WideLogo="Assets\Custom CD Wide Icon.png" />
+        <SplashScreen Image="Assets\Custom CD Splash Screen.png" BackgroundColor="#00CC99" />
       </VisualElements>
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="Clock.WinRT.TileSchedulerTaskDeliveryDate">
