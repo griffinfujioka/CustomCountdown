@@ -18,16 +18,36 @@
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
-    <Grid Style="{StaticResource LayoutRootStyle}">
-        <TextBlock x:Name="untilTxtBlock" Text="Until the big event!" TextWrapping="Wrap" FontSize="96" FontFamily="DilleniaUPC" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="10,80,10,80"/>
-        <TextBlock x:Name="countdownTxtBlock" TextWrapping="Wrap" FontSize="72" FontFamily="DilleniaUPC" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <ScrollViewer x:Name="MainScrollViewer" VerticalScrollMode="Disabled" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
+
+        
+
+        <Grid x:Name="MainGrid" Style="{StaticResource LayoutRootStyle}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftColumn" Width="*"/>
+                <ColumnDefinition x:Name="RightColumn"  Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid x:Name="SnappedGrid" Visibility="Collapsed" Grid.Column="0" HorizontalAlignment="Left">
+                <StackPanel Orientation="Vertical">
+                    
+                
+                <TextBlock x:Name="countdownTxtBlockSnapped" TextWrapping="Wrap" FontSize="48" FontFamily="DilleniaUPC" Width="320" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,80,0,10"/>
+                <TextBlock x:Name="untilTxtBlockSnapped" Text="Until the big event!" TextWrapping="Wrap" FontSize="36" FontFamily="DilleniaUPC" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                
+                </StackPanel>
+            </Grid>
 
 
-        <StackPanel Orientation="Horizontal" Width="Auto" Height="100" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-            
-            <Button x:Name="changeDateBtn" Style="{StaticResource CalendarAppBarButtonStyle}" Margin="8,14,8,0" BorderThickness="0" Foreground="White" Click="changeDateBtn_Click"/>
-        </StackPanel>
-        <Popup x:Name="datePopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="400" Height="Auto" Closed="datePopUp_Closed" Opened="datePopUp_Opened" Margin="0,230,0,0">
+
+            <StackPanel Grid.Column="0" Orientation="Vertical">
+                
+                <TextBlock x:Name="countdownTxtBlock" TextWrapping="Wrap" FontSize="72" FontFamily="DilleniaUPC" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,0,0"/>
+                <TextBlock x:Name="untilTxtBlock" Text="Until the big event!" TextWrapping="Wrap" FontSize="96" FontFamily="DilleniaUPC" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                <Button x:Name="changeDateBtn" Style="{StaticResource CalendarAppBarButtonStyle}" Margin="8,14,8,14"  HorizontalAlignment="Center" VerticalAlignment="Bottom" BorderThickness="0" Foreground="White" Click="changeDateBtn_Click"/>
+
+            </StackPanel>
+            <Popup x:Name="datePopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="400" Height="Auto" Closed="datePopUp_Closed" Opened="datePopUp_Opened" Margin="0,230,0,0">
             <Grid x:Name="grid"  Width="400" Background="White">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
@@ -132,7 +152,23 @@
                 <VisualState x:Name="Snapped">
                     <Storyboard>
 
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="untilTxtBlock" Storyboard.TargetProperty="Style">
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainGrid.Column[1]" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visibility.Collapsed"/>
+                            </ObjectAnimationUsingKeyFrames>
+
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainScrollViewer" Storyboard.TargetProperty="Visibility">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visibility.Collapsed"/>
+                            </ObjectAnimationUsingKeyFrames>
+
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainScrollViewer" Storyboard.TargetProperty="Width">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="320"/>
+                            </ObjectAnimationUsingKeyFrames>
+
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainGrid" Storyboard.TargetProperty="Width">
+                                <DiscreteObjectKeyFrame KeyTime="0" Value="320"/>
+                            </ObjectAnimationUsingKeyFrames>
+                        
+                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="untilTxtBlock" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource BasicTextStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="countdownTxtBlock">
@@ -243,4 +279,5 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
+    </ScrollViewer>
 </common:LayoutAwarePage>

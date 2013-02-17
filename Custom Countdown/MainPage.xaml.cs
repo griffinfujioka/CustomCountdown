@@ -16,6 +16,7 @@ using Windows.Globalization.DateTimeFormatting; // datetime formatting
 using Windows.ApplicationModel.Background;      // background tasks 
 using Windows.UI;
 using Clock.WinRT;
+using Windows.UI.ViewManagement;        // Handle state changes in C#
 // The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
 namespace Custom_Countdown
@@ -43,15 +44,8 @@ namespace Custom_Countdown
         public MainPage()
         {
             this.InitializeComponent();
+
             appSettings = ApplicationData.Current.LocalSettings.Values;
-
-            Loaded += OnLoaded;
-
-            #region Initialize all selected values in the delivery date popup
-            monthComboBox.SelectedIndex = 0;
-            dayComboBox.SelectedIndex = 0;
-            yearComboBox.SelectedIndex = 0;
-            #endregion
 
             #region Show the date PopUp if there isn't a saved date
             if (!appSettings.ContainsKey(dateKey))
@@ -62,6 +56,7 @@ namespace Custom_Countdown
             }
             else
             {
+                
                 datePopUp.IsOpen = false;
                 string date = appSettings[dateKey].ToString();
                 var tempArray = date.Split(' ');    // Results in  tempArray[0] = xx/xx/xx
@@ -70,9 +65,34 @@ namespace Custom_Countdown
                 int day = Convert.ToInt32(dateArray[1]);
                 int year = Convert.ToInt32(dateArray[2]);
                 DueDate = new DateTime(year, month, day);
-                //Clock.WinRT.ClockTileScheduler.SetGraduationDate(year, month, day); 
             }
             #endregion
+            
+
+            var bounds = Window.Current.Bounds;
+
+            double height = bounds.Height;
+
+            double width = bounds.Width;
+
+            int int_width = (int)width;
+
+            var grid_length_width = new Windows.UI.Xaml.GridLength(width, GridUnitType.Pixel);
+            var half_grid_length_width = new Windows.UI.Xaml.GridLength(grid_length_width.Value / 2, GridUnitType.Pixel); 
+            MainGrid.ColumnDefinitions[0].Width = grid_length_width;
+            MainGrid.ColumnDefinitions[1].Width = half_grid_length_width;
+
+            Loaded += OnLoaded;
+            // Register for the window resize event
+            Window.Current.SizeChanged += WindowSizeChanged;  
+
+            #region Initialize all selected values in the delivery date popup
+            monthComboBox.SelectedIndex = 0;
+            dayComboBox.SelectedIndex = 0;
+            yearComboBox.SelectedIndex = 0;
+            #endregion
+
+            
 
 
         }
@@ -166,6 +186,11 @@ namespace Custom_Countdown
             var timeLeft = DueDate - DateTime.Now;
 
             countdownTxtBlock.Text = string.Format("{0:D2} days\n{1:D2} hours\n{2:D2} minutes\n{3:D2} seconds", timeLeft.Days, timeLeft.Hours, timeLeft.Minutes, timeLeft.Seconds);
+
+            // Obtain view state by explicitly querying for it
+            ApplicationViewState myViewState = ApplicationView.Value;
+            if(myViewState.ToString() == "Snapped")
+                countdownTxtBlockSnapped.Text = string.Format("{0:D2} days\n{1:D2} hours\n{2:D2} minutes\n{3:D2} seconds", timeLeft.Days, timeLeft.Hours, timeLeft.Minutes, timeLeft.Seconds);
         }
         #endregion
 
@@ -275,6 +300,7 @@ namespace Custom_Countdown
             }
             else
             {
+                changeDateBtn.Visibility = Visibility.Collapsed; 
                 untilTxtBlock.Visibility = Visibility.Collapsed;
                 countdownTxtBlock.Visibility = Visibility.Collapsed;
                 datePopUp.IsOpen = true;
@@ -400,6 +426,62 @@ namespace Custom_Countdown
             }
             #endregion
 
+        }
+
+        private void WindowSizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
+        {
+            var bounds = Window.Current.Bounds;
+            double height = bounds.Height;
+            double width = bounds.Width;
+            // Obtain view state by explicitly querying for it
+            ApplicationViewState myViewState = ApplicationView.Value;
+            switch (myViewState.ToString())
+            {
+                case "Snapped":
+                    MainScrollViewer.HorizontalScrollMode = ScrollMode.Disabled;
+                    MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+                    MainScrollViewer.MaxWidth = 320; 
+                    SnappedGrid.Visibility = Visibility.Visible; 
+                    var timeLeft = DueDate - DateTime.Now;
+                    countdownTxtBlock.Visibility = Visibility.Collapsed;
+                    untilTxtBlock.Visibility = Visibility.Collapsed;
+                    changeDateBtn.Visibility = Visibility.Collapsed; 
+                    countdownTxtBlockSnapped.Text = string.Format("{0:D2} days\n{1:D2} hours\n{2:D2} minutes\n{3:D2} seconds", timeLeft.Days, timeLeft.Hours, timeLeft.Minutes, timeLeft.Seconds);
+                    break;
+                case "FullScreenLandscape":
+                    MainScrollViewer.HorizontalScrollMode = ScrollMode.Auto;
+                    MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                    SnappedGrid.Visibility = Visibility.Collapsed;
+                    countdownTxtBlock.Visibility = Visibility.Visible;
+                    untilTxtBlock.Visibility = Visibility.Visible;
+                    changeDateBtn.Visibility = Visibility.Visible;
+
+                    int int_width = (int)width;
+                    var grid_length_width = new Windows.UI.Xaml.GridLength(width, GridUnitType.Pixel);
+                    var half_grid_length_width = new Windows.UI.Xaml.GridLength(grid_length_width.Value / 2, GridUnitType.Pixel);
+                    MainGrid.ColumnDefinitions[0].Width = grid_length_width;
+                    MainGrid.ColumnDefinitions[1].Width = half_grid_length_width;
+                    MainScrollViewer.MaxWidth = width + width / 2;
+                    break;
+                case "Filled":
+                    MainScrollViewer.Visibility = Visibility.Visible; 
+                    MainGrid.HorizontalAlignment = HorizontalAlignment.Left;
+                    MainGrid.Visibility = Visibility.Visible; 
+                    MainScrollViewer.HorizontalScrollMode = ScrollMode.Auto;
+                    MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                    SnappedGrid.Visibility = Visibility.Collapsed;
+                    countdownTxtBlock.Visibility = Visibility.Visible;
+                    untilTxtBlock.Visibility = Visibility.Visible;
+                    changeDateBtn.Visibility = Visibility.Visible;
+                    int int_width1 = (int)width;
+                    var grid_length_width1 = new Windows.UI.Xaml.GridLength(width , GridUnitType.Pixel);
+                    var half_grid_length_width1 = new Windows.UI.Xaml.GridLength(grid_length_width.Value / 4, GridUnitType.Pixel);
+                    MainGrid.ColumnDefinitions[0].Width = grid_length_width1;
+                    MainGrid.ColumnDefinitions[1].Width = half_grid_length_width1; 
+                    MainScrollViewer.MaxWidth = width + width/2;
+                    break;
+                default: break; 
+            }
         }
     }
 }
