@@ -8,6 +8,7 @@
     xmlns:common="using:Custom_Countdown.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:UI="using:Microsoft.Advertising.WinRT.UI"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -20,6 +21,7 @@
     -->
     <ScrollViewer x:Name="MainScrollViewer" VerticalScrollMode="Disabled" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
 
+        
         
 
         <Grid x:Name="MainGrid" Style="{StaticResource LayoutRootStyle}">
@@ -145,7 +147,18 @@
 
             </Grid>
         </Popup>
-        <VisualStateManager.VisualStateGroups>
+            <UI:AdControl
+                    x:Name="adControl" 
+                    HorizontalAlignment="Center" 
+                    Height="600" 
+                    Margin="0,0,0,0" 
+                    Grid.Column="1"
+                    Opacity="1"
+                    VerticalAlignment="Center" 
+                    Width="160" 
+                     ApplicationId="c20571cb-9ff3-47f2-8d55-3a7a44f38cd4" AdUnitId="116862" 
+                     />
+            <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ApplicationViewStates">
                 <VisualState x:Name="FullScreenLandscape"/>
                 <VisualState x:Name="Filled" />
