@@ -14,42 +14,44 @@
     <Page.Resources>
     </Page.Resources>
 
-    <!--
-        This grid acts as a root panel for the page that defines two rows:
-        * Row 0 contains the back button and page title
-        * Row 1 contains the rest of the page layout
-    -->
-    <ScrollViewer x:Name="MainScrollViewer" VerticalScrollMode="Disabled" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
-
-        
-        
-
-        <Grid x:Name="MainGrid" Style="{StaticResource LayoutRootStyle}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="LeftColumn" Width="*"/>
-                <ColumnDefinition x:Name="RightColumn"  Width="*"/>
-            </Grid.ColumnDefinitions>
-
-            <Grid x:Name="SnappedGrid" Visibility="Collapsed" Grid.Column="0" HorizontalAlignment="Left">
-                <StackPanel Orientation="Vertical">
-                    
-                
-                <TextBlock x:Name="countdownTxtBlockSnapped" TextWrapping="Wrap" FontSize="48" FontFamily="DilleniaUPC" Width="320" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,80,0,10"/>
-                <TextBlock x:Name="untilTxtBlockSnapped" Text="Until the big event!" TextWrapping="Wrap" FontSize="36" FontFamily="DilleniaUPC" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                
-                </StackPanel>
-            </Grid>
 
 
 
-            <StackPanel Grid.Column="0" Orientation="Vertical">
-                
-                <TextBlock x:Name="countdownTxtBlock" TextWrapping="Wrap" FontSize="72" FontFamily="DilleniaUPC" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,150,0,0"/>
-                <TextBlock x:Name="untilTxtBlock" Text="Until the big event!" TextWrapping="Wrap" FontSize="96" FontFamily="DilleniaUPC" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0"/>
-                <Button x:Name="changeDateBtn" Style="{StaticResource CalendarAppBarButtonStyle}" Margin="8,14,8,14"  HorizontalAlignment="Center" VerticalAlignment="Bottom" BorderThickness="0" Foreground="White" Click="changeDateBtn_Click"/>
 
-            </StackPanel>
-            <Popup x:Name="datePopUp" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="400" Height="Auto" Closed="datePopUp_Closed" Opened="datePopUp_Opened" Margin="0,230,0,0">
+    <Grid x:Name="MainGrid" Style="{StaticResource LayoutRootStyle}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="LeftColumn" Width="*"/>
+            <ColumnDefinition x:Name="RightColumn"  Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="140"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <UI:AdControl
+                    x:Name="adControl" 
+                    HorizontalAlignment="Center" 
+                    Height="60" 
+                    Margin="0,0,0,0" 
+                    Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Grid.Row="0"
+                    Opacity="1"
+                    VerticalAlignment="Center" 
+                    Width="292" 
+                     ApplicationId="c20571cb-9ff3-47f2-8d55-3a7a44f38cd4" AdUnitId="122751" 
+                     />
+
+
+
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
+
+            <TextBlock x:Name="countdownTxtBlock" TextWrapping="Wrap" FontSize="60" FontFamily="DilleniaUPC" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,0,0"/>
+            <TextBlock x:Name="untilTxtBlock" Text="Until the big event!" TextWrapping="Wrap" FontSize="84" FontFamily="DilleniaUPC" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0"/>
+            <Button x:Name="changeDateBtn" Style="{StaticResource CalendarAppBarButtonStyle}" Margin="8,14,8,14"  HorizontalAlignment="Center" VerticalAlignment="Bottom" BorderThickness="0" Foreground="White" Click="changeDateBtn_Click"/>
+
+        </StackPanel>
+        <Popup x:Name="datePopUp" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="400" Height="Auto" Closed="datePopUp_Closed" Opened="datePopUp_Opened" Margin="0,230,0,0">
             <Grid x:Name="grid"  Width="400" Background="White">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
@@ -62,7 +64,7 @@
                     <ColumnDefinition Width="100"/>
                 </Grid.ColumnDefinitions>
 
-            
+
 
 
 
@@ -135,7 +137,7 @@
 
                 </StackPanel>
 
-                
+
                 <StackPanel x:Name="stackPanel5" Orientation="Vertical" Grid.Row="1" Grid.Column="0" Width="200" HorizontalAlignment="Left" Grid.ColumnSpan="3">
                     <TextBlock Text="Countdown name: " Margin="5,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" Foreground="Black"/>
                     <TextBox x:Name="countdownNameTxtBox" Width="230" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,5,0" Grid.Column="1" Grid.ColumnSpan="1"/>
@@ -147,144 +149,26 @@
 
             </Grid>
         </Popup>
-            <UI:AdControl
-                    x:Name="adControl" 
-                    HorizontalAlignment="Center" 
-                    Height="600" 
-                    Margin="0,0,0,0" 
-                    Grid.Column="1"
-                    Opacity="1"
-                    VerticalAlignment="Center" 
-                    Width="160" 
-                     ApplicationId="c20571cb-9ff3-47f2-8d55-3a7a44f38cd4" AdUnitId="116862" 
-                     />
-            <VisualStateManager.VisualStateGroups>
+
+        <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="ApplicationViewStates">
                 <VisualState x:Name="FullScreenLandscape"/>
                 <VisualState x:Name="Filled" />
                 <VisualState x:Name="Snapped">
                     <Storyboard>
 
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainGrid.Column[1]" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visibility.Collapsed"/>
-                            </ObjectAnimationUsingKeyFrames>
 
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainScrollViewer" Storyboard.TargetProperty="Visibility">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="Visibility.Collapsed"/>
-                            </ObjectAnimationUsingKeyFrames>
-
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainScrollViewer" Storyboard.TargetProperty="Width">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="320"/>
-                            </ObjectAnimationUsingKeyFrames>
-
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="MainGrid" Storyboard.TargetProperty="Width">
-                                <DiscreteObjectKeyFrame KeyTime="0" Value="320"/>
-                            </ObjectAnimationUsingKeyFrames>
-                        
-                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="untilTxtBlock" Storyboard.TargetProperty="Style">
-                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource BasicTextStyle}"/>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="countdownTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>214</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="countdownTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>282</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="countdownTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>0</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="untilTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>NaN</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="untilTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>NaN</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="untilTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>40,0,0,141</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.HorizontalAlignment)" Storyboard.TargetName="untilTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <HorizontalAlignment>Stretch</HorizontalAlignment>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <DoubleAnimation Duration="0" To="48" Storyboard.TargetProperty="(TextBlock.FontSize)" Storyboard.TargetName="countdownTxtBlock" d:IsOptimized="True"/>
-                        <DoubleAnimation Duration="0" To="48" Storyboard.TargetProperty="(TextBlock.FontSize)" Storyboard.TargetName="untilTxtBlock" d:IsOptimized="True"/>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Canvas.Left)" Storyboard.TargetName="countdownTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>53</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Canvas.Top)" Storyboard.TargetName="countdownTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>117</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Canvas.Left)" Storyboard.TargetName="untilTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>71</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Canvas.Top)" Storyboard.TargetName="untilTxtBlock">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>455</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="grid">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>367</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="datePopUp">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <x:Double>320</x:Double>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
-                        </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="datePopUp">
-                            <DiscreteObjectKeyFrame KeyTime="0">
-                                <DiscreteObjectKeyFrame.Value>
-                                    <Thickness>0,234</Thickness>
-                                </DiscreteObjectKeyFrame.Value>
-                            </DiscreteObjectKeyFrame>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="countdownTxtBlock" Storyboard.TargetProperty="FontSize" >
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="36"/>
                         </ObjectAnimationUsingKeyFrames>
 
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="untilTxtBlock" Storyboard.TargetProperty="FontSize" >
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="48"/>
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="changeDateBtn" Storyboard.TargetProperty="Visibility" >
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
 
 
                     </Storyboard>
@@ -292,5 +176,4 @@
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
     </Grid>
-    </ScrollViewer>
 </common:LayoutAwarePage>

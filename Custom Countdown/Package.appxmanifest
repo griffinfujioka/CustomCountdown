@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="36726GriffinFujioka.CustomCountdown" Publisher="CN=7A2280AF-F3B0-499B-A221-E1F53BF165FF" Version="1.0.0.0" />
+  <Identity Name="36726GriffinFujioka.CustomCountdown" Publisher="CN=7A2280AF-F3B0-499B-A221-E1F53BF165FF" Version="1.0.0.1" />
   <Properties>
     <DisplayName>Custom Countdown</DisplayName>
     <PublisherDisplayName>Griffin Fujioka</PublisherDisplayName>
@@ -21,7 +21,7 @@
         <SplashScreen Image="Assets\Custom CD Splash Screen.png" BackgroundColor="#00CC99" />
       </VisualElements>
       <Extensions>
-        <Extension Category="windows.backgroundTasks" EntryPoint="Clock.WinRT.TileSchedulerTaskDeliveryDate">
+        <Extension Category="windows.backgroundTasks" EntryPoint="Clock.WinRT.TileSchedulerTask">
           <BackgroundTasks>
             <Task Type="systemEvent" />
             <Task Type="timer" />

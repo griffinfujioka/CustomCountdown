@@ -240,7 +240,6 @@
     <Language Code="pt-br" InMinimumRequirementSet="true" />
     <Language Code="pt-pt" InMinimumRequirementSet="true" />
     <Language Code="quc-latn" InMinimumRequirementSet="false" />
-    <Language Code="qut" InMinimumRequirementSet="false" />
     <Language Code="qut-gt" InMinimumRequirementSet="false" />
     <Language Code="qut-latn" InMinimumRequirementSet="false" />
     <Language Code="quz" InMinimumRequirementSet="false" />
@@ -292,9 +291,10 @@
     <Language Code="ti" InMinimumRequirementSet="false" />
     <Language Code="ti-et" InMinimumRequirementSet="false" />
     <Language Code="tk-cyrl" InMinimumRequirementSet="false" />
+    <Language Code="tk-cyrl-tr" InMinimumRequirementSet="false" />
     <Language Code="tk-latn" InMinimumRequirementSet="false" />
+    <Language Code="tk-latn-tr" InMinimumRequirementSet="false" />
     <Language Code="tk-tm" InMinimumRequirementSet="false" />
-    <Language Code="tk-tr" InMinimumRequirementSet="false" />
     <Language Code="tn" InMinimumRequirementSet="false" />
     <Language Code="tn-bw" InMinimumRequirementSet="false" />
     <Language Code="tn-za" InMinimumRequirementSet="false" />
@@ -343,13 +343,24 @@
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
+    <MainPackageIdentityName>36726GriffinFujioka.ArchiveVideoBlogging</MainPackageIdentityName>
+    <MainPackageIdentityName>36726GriffinFujioka.BirthdayCountdownFree</MainPackageIdentityName>
     <MainPackageIdentityName>36726GriffinFujioka.BlueSoD</MainPackageIdentityName>
+    <MainPackageIdentityName>36726GriffinFujioka.CaffeineCalculator</MainPackageIdentityName>
     <MainPackageIdentityName>36726GriffinFujioka.ChristmasCountdownad-supported</MainPackageIdentityName>
     <MainPackageIdentityName>36726GriffinFujioka.ChristmasCountdownDonate</MainPackageIdentityName>
     <MainPackageIdentityName>36726GriffinFujioka.ChristmasCountdownFree</MainPackageIdentityName>
     <MainPackageIdentityName>36726GriffinFujioka.BabyCountdownFree</MainPackageIdentityName>
+    <MainPackageIdentityName>36726GriffinFujioka.DesignPatterns</MainPackageIdentityName>
     <MainPackageIdentityName>36726GriffinFujioka.EZBaseConverter</MainPackageIdentityName>
     <MainPackageIdentityName>36726GriffinFujioka.GraduationCountdown</MainPackageIdentityName>
+    <MainPackageIdentityName>36726GriffinFujioka.IdeasforWindows8</MainPackageIdentityName>
+    <MainPackageIdentityName>36726GriffinFujioka.MyPercentCalculator</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://appdev.microsoft.com:443/StorePortals/Developer/Catalog/ReleaseAnchor/ece695d4-05c2-4882-9000-8d15cf4b8171" />
+  <PackageInfoList LandingUrl="https://appdev.microsoft.com:443/StorePortals/Developer/Catalog/ReleaseAnchor/ece695d4-05c2-4882-9000-8d15cf4b8171">
+    <PackageInfo>
+      <PackageArchitecture>neutral</PackageArchitecture>
+      <PackageMaxArchitectureVersion>1.0.0.0</PackageMaxArchitectureVersion>
+    </PackageInfo>
+  </PackageInfoList>
 </StoreAssociation>

@@ -19,59 +19,55 @@ namespace Clock.WinRT
         private static Windows.Foundation.Collections.IPropertySet appSettings;
         private const string dateKey = "dateKey";
         private const string nameKey = "nameKey"; 
-        private static DateTime graduation_date;
-        private static bool _babyHasName;
-        private static string _babyName;
+        private static DateTime end_date;
+        private static bool _countdownHasName;
+        private static string _countdownName;
 
-        public static string babyName
+        public static string CountdownName
         {
-            get { return _babyName; }
-            set { _babyName = value; }
+            get { return _countdownName; }
+            set { _countdownName = value; }
         }
 
-        public static bool babyHasName
+        public static bool CountdownHasName
         {
-            get { return _babyHasName; }
-            set { _babyHasName = value; }
+            get { return _countdownHasName; }
+            set { _countdownHasName = value; }
         }
 
 
-        public static void SetLiveTileStyle(int style)
-        {
-            Live_Tile_Style = style;
-        }
+       
         public static void CreateSchedule()
         {
             appSettings = ApplicationData.Current.LocalSettings.Values;
 
             if (appSettings.ContainsKey(nameKey))    // If a name is given 
             {
-                babyHasName = true;
-                babyName = appSettings[nameKey].ToString();
+                CountdownHasName = true;
+                CountdownName = appSettings[nameKey].ToString();
             }
             else
-                babyHasName = false; 
+                CountdownHasName = false; 
 
 
-            #region Show the date PopUp if there isn't a saved date
-            if (!appSettings.ContainsKey(dateKey))
+            #region Get the date if there is one
+            if (appSettings.ContainsKey(dateKey))
             {
-                // No date is registered 
-                //graduation_date = new DateTime(DateTime.Now.Year + 1, DateTime.Now.Month, DateTime.Now.Day); 
-            }
-            else
-            {
-                
+
                 string date = appSettings[dateKey].ToString();
                 var tempArray = date.Split(' ');    // Results in  tempArray[0] = xx/xx/xx
                 var dateArray = tempArray[0].Split('/');
                 int month = Convert.ToInt32(dateArray[0]);
                 int day = Convert.ToInt32(dateArray[1]);
                 int year = Convert.ToInt32(dateArray[2]);
-                graduation_date = new DateTime(year, month, day);
-                //Clock.WinRT.ClockTileScheduler.SetGraduationDate(year, month, day); 
+                end_date = new DateTime(year, month, day);
+            }
+            else
+            {
+                // We don't have a date saved.
             }
             #endregion 
+
             int CurrentYear = DateTime.Now.Year;                // Current year
             DateTime NewYear = new DateTime(DateTime.Now.Year + 1, 1, 1);       // January 1st of the next year
 
@@ -90,109 +86,28 @@ namespace Clock.WinRT
             if (plannedUpdated.Count > 0)
                 updateTime = plannedUpdated.Select(x => x.DeliveryTime.DateTime).Union(new[] { updateTime }).Max();
 
-            // Here is where I define a number of different live tiles 
-            // This is the special tile that will display on Christmas day 
-            const string Christmas_xml = @"<tile><visual>
-                                        <binding template=""TileSquareText04""><text id=""1"">Merry Christmas!</text></binding>
-                                        <binding template=""TileWideText03""><text id=""1"">Merry Christmas!</text></binding>
-                                </visual></tile>";
 
 
-
-            // Tile 1: XX days until Christmas!
+            var timeLeft = end_date - DateTime.Now;
             string xml = @"<tile><visual>
-                                        <binding template=""TileSquareText01""><text id=""1"">{0}</text><text id=""2"">until the baby!</text></binding>
-                                        <binding template=""TileWideText01""><text id=""1"">{0}</text><text id=""2"">until the baby!</text></binding>
-                                </visual></tile>";
-
-            // Adjust the live tile xml if the baby name is provided 
-            if (babyHasName)
-            {
-                xml = @"<tile><visual>
                                         <binding template=""TileSquareText01""><text id=""1"">{0}</text><text id=""2"">until {1}!</text></binding>
                                         <binding template=""TileWideText01""><text id=""1"">{0}</text><text id=""2"">until {1}!</text></binding>
                                 </visual></tile>";
+            if (CountdownHasName)
+            {
+                var tileXmlCountdown = string.Format(xml, timeLeft.Days.ToString() + " days", CountdownName);
+
+                XmlDocument documentNow = new XmlDocument();
+                documentNow.LoadXml(tileXmlCountdown);
+
+                tileUpdater.Update(new TileNotification(documentNow) { ExpirationTime = now.AddMinutes(1) });
             }
             else
             {
-                xml = @"<tile><visual>
-                                        <binding template=""TileSquareText01""><text id=""1"">{0}</text><text id=""2"">until the baby!</text></binding>
-                                        <binding template=""TileWideText01""><text id=""1"">{0}</text><text id=""2"">until the baby!</text></binding>
-                                </visual></tile>";
+                xml = "";
             }
 
-            // Tile 2: XX days, YY hours until Christmas! 
-            const string xml_2 = @"<tile><visual>
-                                        <binding template=""TileSquareText01"">
-                                            <text id=""1"">{0}</text>
-                                            <text id=""2"">{1}</text>
-                                            <text id=""3"">{2}</text>
-                                        </binding>
-                                        <binding template=""TileWideText05"">
-                                            <text id=""1"">{0}</text>
-                                            <text id=""2"">{1}</text>
-                                            <text id=""3"">{2}</text>
-                                        </binding>
-                                </visual></tile>";
 
-            // Tile 3: XX days, YY hours, ZZ minutes until Christmas!
-            const string xml_3 = @"<tile><visual>
-                                        <binding template=""TileSquareText01"">
-                                            <text id=""1"">{0}</text>
-                                            <text id=""2"">{1}</text>
-                                            <text id=""3"">{2}</text>
-                                            <text id=""4"">until Christmas!</text>
-                                        </binding>
-                                        <binding template=""TileWideText05"">
-                                            <text id=""1"">{0}</text>
-                                            <text id=""2"">{1}</text>
-                                            <text id=""3"">{2}</text>
-                                            <text id=""4"">until Christmas!</text>
-                                        </binding>
-                                </visual></tile>";
-
-          
-            var timeLeft = graduation_date - DateTime.Now;
-            var tileXmlCountdown = "";
-            if (Live_Tile_Style == 1)
-            {
-                if (babyHasName && appSettings[nameKey].ToString() != "")
-                {
-                    tileXmlCountdown = string.Format(xml, timeLeft.Days.ToString() + " days", babyName);
-                }
-                else
-                {
-                    tileXmlCountdown = string.Format(xml, timeLeft.Days.ToString() + " days until the big event");
-                }
-            }
-            else if (Live_Tile_Style == 2)
-            {
-                tileXmlCountdown = string.Format(xml_2, timeLeft.Days.ToString() + " days,", timeLeft.Hours == 1 ? timeLeft.Hours.ToString() + " hour" : timeLeft.Hours.ToString() + " hours", "until Christmas!");
-            }
-            else if (Live_Tile_Style == 3)
-            {
-                tileXmlCountdown = string.Format(xml_3, timeLeft.Days.ToString() + " days,", timeLeft.Hours == 1 ? timeLeft.Hours.ToString() + " hour," : timeLeft.Hours.ToString() + " hours,", timeLeft.Minutes == 1 ? timeLeft.Minutes.ToString() + " minute" : timeLeft.Minutes.ToString() + " minutes");
-            }
-            else    // default to style 1 
-            {
-                if (babyHasName && appSettings[nameKey].ToString() != "")
-                {
-                    tileXmlCountdown = string.Format(xml, timeLeft.Days.ToString() + " days", babyName);
-                }
-                else
-                {
-                    tileXmlCountdown = string.Format(xml, timeLeft.Days.ToString() + " days until the big event");
-                }
-            }
-
-            if (timeLeft.Days < 0)
-                tileXmlCountdown = "No due date set."; 
-
-
-            XmlDocument documentNow = new XmlDocument();
-            documentNow.LoadXml(tileXmlCountdown);
-
-            tileUpdater.Update(new TileNotification(documentNow) { ExpirationTime = now.AddMinutes(1) });
 
             for (var startPlanning = updateTime; startPlanning < planTill; startPlanning = startPlanning.AddMinutes(1))
             {
@@ -201,50 +116,16 @@ namespace Clock.WinRT
 
                 try
                 {
-
-                    var tileXml = "";
-                    if (Live_Tile_Style == 1)
+                    if (CountdownHasName)
                     {
+                        var tileXmlTile = string.Format(xml, timeLeft.Days.ToString() + " days", CountdownName);
 
-                        if (babyHasName && appSettings[nameKey].ToString() != "")
-                        {
-                            tileXml = string.Format(xml, timeLeft.Days.ToString() + " days", babyName);
-                        }
-                        else
-                        {
-                            tileXml = string.Format(xml, timeLeft.Days.ToString() + " days until the big event");
-                        }
-                    }
-                    else if (Live_Tile_Style == 2)
-                    {
-                        tileXml = string.Format(xml_2, timeLeft.Days.ToString() + " days,", timeLeft.Hours == 1 ? timeLeft.Hours.ToString() + " hour" : timeLeft.Hours.ToString() + " hours", "until Christmas!");
-                    }
-                    else if (Live_Tile_Style == 3)
-                    {
-                        tileXml = string.Format(xml_3, timeLeft.Days.ToString() + " days,", timeLeft.Hours == 1 ? timeLeft.Hours.ToString() + " hour," : timeLeft.Hours.ToString() + " hours,", timeLeft.Minutes == 1 ? timeLeft.Minutes.ToString() + " minute" : timeLeft.Minutes.ToString() + " minutes");
-                    }
-                    else
-                    {
+                        XmlDocument document = new XmlDocument();
+                        document.LoadXml(tileXmlTile);
 
-                        if (babyHasName && appSettings[nameKey].ToString() != "")
-                        {
-                            tileXml = string.Format(xml, timeLeft.Days.ToString() + " days", babyName);
-                        }
-                        else
-                        {
-                            tileXml = string.Format(xml, timeLeft.Days.ToString() + " days until the big event");
-                        }
+                        ScheduledTileNotification scheduledNotification = new ScheduledTileNotification(document, new DateTimeOffset(startPlanning)) { ExpirationTime = startPlanning.AddMinutes(1) };
+                        tileUpdater.AddToSchedule(scheduledNotification);
                     }
-
-                    // Nothing will show if the days left is < 0 
-                    if (timeLeft.Days < 0)
-                        tileXml = "No graduation date set."; 
-                    
-                    XmlDocument document = new XmlDocument();
-                    document.LoadXml(tileXml);
-
-                    ScheduledTileNotification scheduledNotification = new ScheduledTileNotification(document, new DateTimeOffset(startPlanning)) { ExpirationTime = startPlanning.AddMinutes(1) };
-                    tileUpdater.AddToSchedule(scheduledNotification);
 
                     Debug.WriteLine("schedule for: " + startPlanning);
                 }

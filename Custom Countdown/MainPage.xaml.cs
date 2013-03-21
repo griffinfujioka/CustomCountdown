@@ -34,8 +34,8 @@ namespace Custom_Countdown
         private const string livetileKey = "livetileKey";       // For live tile style 
         private const string nameKey = "nameKey";               // For the baby's name 
         private const string TASKNAMEUSERPRESENT = "TileSchedulerTaskUserPresent";
-        private const string TASKNAMETIMER = "TileSchedulerTaskTimerDeliveryDate";
-        private const string TASKENTRYPOINT = "Clock.WinRT.TileSchedulerTaskDeliveryDate";
+        private const string TASKNAMETIMER = "TileSchedulerTaskTimer";
+        private const string TASKENTRYPOINT = "Clock.WinRT.TileSchedulerTask";
         public static DateTime DueDate;
         private DispatcherTimer timer;
         #endregion
@@ -52,6 +52,7 @@ namespace Custom_Countdown
             {
                 untilTxtBlock.Visibility = Visibility.Collapsed;
                 countdownTxtBlock.Visibility = Visibility.Collapsed;
+                changeDateBtn.Visibility = Visibility.Collapsed; 
                 datePopUp.IsOpen = true;
             }
             else
@@ -69,22 +70,9 @@ namespace Custom_Countdown
             #endregion
             
 
-            var bounds = Window.Current.Bounds;
+           
 
-            double height = bounds.Height;
-
-            double width = bounds.Width;
-
-            int int_width = (int)width;
-
-            var grid_length_width = new Windows.UI.Xaml.GridLength(width, GridUnitType.Pixel);
-            var half_grid_length_width = new Windows.UI.Xaml.GridLength(grid_length_width.Value / 2, GridUnitType.Pixel); 
-            MainGrid.ColumnDefinitions[0].Width = grid_length_width;
-            MainGrid.ColumnDefinitions[1].Width = half_grid_length_width;
-
-            Loaded += OnLoaded;
-            // Register for the window resize event
-            Window.Current.SizeChanged += WindowSizeChanged;  
+            Loaded += OnLoaded; 
 
             #region Initialize all selected values in the delivery date popup
             monthComboBox.SelectedIndex = 0;
@@ -110,6 +98,15 @@ namespace Custom_Countdown
         /// session.  This will be null the first time a page is visited.</param>
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
+            try
+            {
+                
+                CreateClockTask();
+            }
+            catch (Exception e)
+            {
+
+            }
         }
         #endregion
 
@@ -128,6 +125,7 @@ namespace Custom_Countdown
         #region OnNavigatedTo
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            CreateClockTask();
             if (!appSettings.ContainsKey(genderKey))    // If no key is contained, use the default blue 
             {
                 grid.Background = new SolidColorBrush(Color.FromArgb(255, 0, 153, 255));        // Blue by default 
@@ -187,44 +185,50 @@ namespace Custom_Countdown
 
             countdownTxtBlock.Text = string.Format("{0:D2} days\n{1:D2} hours\n{2:D2} minutes\n{3:D2} seconds", timeLeft.Days, timeLeft.Hours, timeLeft.Minutes, timeLeft.Seconds);
 
-            // Obtain view state by explicitly querying for it
-            ApplicationViewState myViewState = ApplicationView.Value;
-            if(myViewState.ToString() == "Snapped")
-                countdownTxtBlockSnapped.Text = string.Format("{0:D2} days\n{1:D2} hours\n{2:D2} minutes\n{3:D2} seconds", timeLeft.Days, timeLeft.Hours, timeLeft.Minutes, timeLeft.Seconds);
+            
         }
         #endregion
 
         #region CreateClockTask
-        public static async void CreateClockTask()
+        private static async void CreateClockTask()
         {
-            try
+            var result = await BackgroundExecutionManager.RequestAccessAsync();
+            if (result == BackgroundAccessStatus.AllowedMayUseActiveRealTimeConnectivity ||
+                result == BackgroundAccessStatus.AllowedWithAlwaysOnRealTimeConnectivity)
             {
+                ClockTileScheduler.CreateSchedule();
 
-                var result = await BackgroundExecutionManager.RequestAccessAsync();
-                if (result == BackgroundAccessStatus.AllowedMayUseActiveRealTimeConnectivity ||
-                    result == BackgroundAccessStatus.AllowedWithAlwaysOnRealTimeConnectivity)
-                {
-                    foreach (var task in BackgroundTaskRegistration.AllTasks)
-                    {
-                        if (task.Value.Name == TASKNAMEUSERPRESENT)
-                            task.Value.Unregister(true);
-                    }
-                    ClockTileScheduler.CreateSchedule();
-
-                    BackgroundTaskBuilder builder = new BackgroundTaskBuilder();
-                    builder.Name = TASKNAMEUSERPRESENT;
-                    builder.TaskEntryPoint = TASKENTRYPOINT;
-                    builder.SetTrigger(new SystemTrigger(SystemTriggerType.UserPresent, false));
-                    builder.Register();
-                    var registration = builder.Register();
-                }
-            }
-            catch
-            {
-
+                EnsureUserPresentTask();
+                EnsureTimerTask();
             }
         }
         #endregion
+
+        private static void EnsureUserPresentTask()
+        {
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+                if (task.Value.Name == TASKNAMEUSERPRESENT)
+                    return;
+
+            BackgroundTaskBuilder builder = new BackgroundTaskBuilder();
+            builder.Name = TASKNAMEUSERPRESENT;
+            builder.TaskEntryPoint = TASKENTRYPOINT;
+            builder.SetTrigger(new SystemTrigger(SystemTriggerType.UserPresent, false));
+            builder.Register();
+        }
+
+        private static void EnsureTimerTask()
+        {
+            foreach (var task in BackgroundTaskRegistration.AllTasks)
+                if (task.Value.Name == TASKNAMETIMER)
+                    return;
+
+            BackgroundTaskBuilder builder = new BackgroundTaskBuilder();
+            builder.Name = TASKNAMETIMER;
+            builder.TaskEntryPoint = TASKENTRYPOINT;
+            builder.SetTrigger(new TimeTrigger(180, false));
+            builder.Register();
+        }
 
         #region datePopUp Save Button Clicked
         private void saveDateBtn_Click(object sender, RoutedEventArgs e)
@@ -428,60 +432,6 @@ namespace Custom_Countdown
 
         }
 
-        private void WindowSizeChanged(object sender, Windows.UI.Core.WindowSizeChangedEventArgs e)
-        {
-            var bounds = Window.Current.Bounds;
-            double height = bounds.Height;
-            double width = bounds.Width;
-            // Obtain view state by explicitly querying for it
-            ApplicationViewState myViewState = ApplicationView.Value;
-            switch (myViewState.ToString())
-            {
-                case "Snapped":
-                    MainScrollViewer.HorizontalScrollMode = ScrollMode.Disabled;
-                    MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
-                    MainScrollViewer.MaxWidth = 320; 
-                    SnappedGrid.Visibility = Visibility.Visible; 
-                    var timeLeft = DueDate - DateTime.Now;
-                    countdownTxtBlock.Visibility = Visibility.Collapsed;
-                    untilTxtBlock.Visibility = Visibility.Collapsed;
-                    changeDateBtn.Visibility = Visibility.Collapsed; 
-                    countdownTxtBlockSnapped.Text = string.Format("{0:D2} days\n{1:D2} hours\n{2:D2} minutes\n{3:D2} seconds", timeLeft.Days, timeLeft.Hours, timeLeft.Minutes, timeLeft.Seconds);
-                    break;
-                case "FullScreenLandscape":
-                    MainScrollViewer.HorizontalScrollMode = ScrollMode.Auto;
-                    MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-                    SnappedGrid.Visibility = Visibility.Collapsed;
-                    countdownTxtBlock.Visibility = Visibility.Visible;
-                    untilTxtBlock.Visibility = Visibility.Visible;
-                    changeDateBtn.Visibility = Visibility.Visible;
-
-                    int int_width = (int)width;
-                    var grid_length_width = new Windows.UI.Xaml.GridLength(width, GridUnitType.Pixel);
-                    var half_grid_length_width = new Windows.UI.Xaml.GridLength(grid_length_width.Value / 2, GridUnitType.Pixel);
-                    MainGrid.ColumnDefinitions[0].Width = grid_length_width;
-                    MainGrid.ColumnDefinitions[1].Width = half_grid_length_width;
-                    MainScrollViewer.MaxWidth = width + width / 2;
-                    break;
-                case "Filled":
-                    MainScrollViewer.Visibility = Visibility.Visible; 
-                    MainGrid.HorizontalAlignment = HorizontalAlignment.Left;
-                    MainGrid.Visibility = Visibility.Visible; 
-                    MainScrollViewer.HorizontalScrollMode = ScrollMode.Auto;
-                    MainScrollViewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-                    SnappedGrid.Visibility = Visibility.Collapsed;
-                    countdownTxtBlock.Visibility = Visibility.Visible;
-                    untilTxtBlock.Visibility = Visibility.Visible;
-                    changeDateBtn.Visibility = Visibility.Visible;
-                    int int_width1 = (int)width;
-                    var grid_length_width1 = new Windows.UI.Xaml.GridLength(width , GridUnitType.Pixel);
-                    var half_grid_length_width1 = new Windows.UI.Xaml.GridLength(grid_length_width.Value / 4, GridUnitType.Pixel);
-                    MainGrid.ColumnDefinitions[0].Width = grid_length_width1;
-                    MainGrid.ColumnDefinitions[1].Width = half_grid_length_width1; 
-                    MainScrollViewer.MaxWidth = width + width/2;
-                    break;
-                default: break; 
-            }
-        }
+     
     }
 }

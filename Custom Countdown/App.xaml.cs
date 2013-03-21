@@ -16,7 +16,8 @@ using Windows.UI.Xaml.Navigation;
 using System.Windows;
 using Windows.UI.ApplicationSettings;
 using Windows.UI;
-using Callisto.Controls; 
+using Callisto.Controls;
+using Clock.WinRT; 
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -102,7 +103,18 @@ namespace Custom_Countdown
                 settings.IsOpen = true;
             });
 
+            var PrivacyPolicy = new SettingsCommand("PrivacyPolicy", "Privacy Policy", (handler) =>
+            {
+                var settings = new SettingsFlyout();
+                settings.Content = new PrivacyPolicy();
+                settings.HeaderBrush = new SolidColorBrush(_background);
+                settings.Background = new SolidColorBrush(_background);
+                settings.HeaderText = "Privacy Policy";
+                settings.IsOpen = true;
+            });
+
             args.Request.ApplicationCommands.Add(About);
+            args.Request.ApplicationCommands.Add(PrivacyPolicy); 
         }
 
         /// <summary>
@@ -117,6 +129,8 @@ namespace Custom_Countdown
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+
+            //ClockTileScheduler.CreateSchedule();
         }
     }
 }
