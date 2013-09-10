@@ -11,13 +11,12 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Windows.Storage;          // for ApplicationData
+using Windows.Storage;                          // ApplicationData
 using Windows.Globalization.DateTimeFormatting; // datetime formatting
 using Windows.ApplicationModel.Background;      // background tasks 
 using Windows.UI;
 using Clock.WinRT;
 using Windows.UI.ViewManagement;        // Handle state changes in C#
-// The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
 namespace Custom_Countdown
 {
@@ -30,9 +29,9 @@ namespace Custom_Countdown
         #region Variable declarations
         private Windows.Foundation.Collections.IPropertySet appSettings;
         private const string dateKey = "dateKey";
-        private const string genderKey = "genderKey";           // For the baby's gender 
-        private const string livetileKey = "livetileKey";       // For live tile style 
-        private const string nameKey = "nameKey";               // For the baby's name 
+        private const string genderKey = "genderKey";        
+        private const string livetileKey = "livetileKey";       
+        private const string nameKey = "nameKey";               // Name of the countdown 
         private const string TASKNAMEUSERPRESENT = "TileSchedulerTaskUserPresent";
         private const string TASKNAMETIMER = "TileSchedulerTaskTimer";
         private const string TASKENTRYPOINT = "Clock.WinRT.TileSchedulerTask";
@@ -69,9 +68,6 @@ namespace Custom_Countdown
             }
             #endregion
             
-
-           
-
             Loaded += OnLoaded; 
 
             #region Initialize all selected values in the delivery date popup
@@ -100,7 +96,6 @@ namespace Custom_Countdown
         {
             try
             {
-                
                 CreateClockTask();
             }
             catch (Exception e)
@@ -110,32 +105,17 @@ namespace Custom_Countdown
         }
         #endregion
 
-        #region Save State
-        /// <summary>
-        /// Preserves state associated with this page in case the application is suspended or the
-        /// page is discarded from the navigation cache.  Values must conform to the serialization
-        /// requirements of <see cref="SuspensionManager.SessionState"/>.
-        /// </summary>
-        /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
-        protected override void SaveState(Dictionary<String, Object> pageState)
-        {
-        }
-        #endregion
-
         #region OnNavigatedTo
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             CreateClockTask();
-            if (!appSettings.ContainsKey(genderKey))    // If no key is contained, use the default blue 
+
+            if (!appSettings.ContainsKey(genderKey))    
             {
-                grid.Background = new SolidColorBrush(Color.FromArgb(255, 0, 153, 255));        // Blue by default 
-            }
-            else
-            {
-               
+                grid.Background = new SolidColorBrush(Color.FromArgb(255, 0, 153, 255));       
             }
 
-            #region Countdown to a baby's specific name if one is provided
+            #region Countdown to a user provided countdown if one is provided
             if (appSettings.ContainsKey(nameKey))
             {
                 if (appSettings[nameKey].ToString() != "")
@@ -157,7 +137,7 @@ namespace Custom_Countdown
         #region OnLoaded
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            int CurrentYear = DateTime.Now.Year;                /* Get Current Year */
+            int CurrentYear = DateTime.Now.Year;                // Get current year 
             DateTime NewYear = new DateTime(DateTime.Now.Year + 1, 1, 1);
 
             timer = new DispatcherTimer
@@ -192,15 +172,20 @@ namespace Custom_Countdown
         #region CreateClockTask
         private static async void CreateClockTask()
         {
-            var result = await BackgroundExecutionManager.RequestAccessAsync();
-            if (result == BackgroundAccessStatus.AllowedMayUseActiveRealTimeConnectivity ||
-                result == BackgroundAccessStatus.AllowedWithAlwaysOnRealTimeConnectivity)
+            try
             {
-                ClockTileScheduler.CreateSchedule();
+                var result = await BackgroundExecutionManager.RequestAccessAsync();
+                if (result == BackgroundAccessStatus.AllowedMayUseActiveRealTimeConnectivity ||
+                    result == BackgroundAccessStatus.AllowedWithAlwaysOnRealTimeConnectivity)
+                {
+                    ClockTileScheduler.CreateSchedule();
 
-                EnsureUserPresentTask();
-                EnsureTimerTask();
+                    EnsureUserPresentTask();
+                    EnsureTimerTask();
+                }
             }
+            catch
+            { }
         }
         #endregion
 
@@ -298,6 +283,7 @@ namespace Custom_Countdown
         {
             if (datePopUp.IsOpen)   // If the popup is already open 
             {
+                changeDateBtn.Visibility = Visibility.Visible;
                 untilTxtBlock.Visibility = Visibility.Visible;
                 countdownTxtBlock.Visibility = Visibility.Visible;
                 datePopUp.IsOpen = false;   // close it 
@@ -332,21 +318,14 @@ namespace Custom_Countdown
         #region Date Popup Closed
         private void datePopUp_Closed(object sender, object e)
         {
-            if (appSettings.ContainsKey(genderKey))
-            {
-                string gender = appSettings[genderKey].ToString();
-                if (gender == "Male")
-                    grid.Background = new SolidColorBrush(Color.FromArgb(255, 0, 153, 255));        // Blue
-                else
-                    grid.Background = new SolidColorBrush(Color.FromArgb(255, 244, 194, 202));      // Pink 
-            }
+
 
             if (countdownNameTxtBox.Text == "")
             {
                 appSettings[nameKey] = "";
             }
 
-            #region Countdown to a baby's specific name if one is provided
+            #region Countdown to a user's provided countdown if one is provided
             if (appSettings.ContainsKey(nameKey))
             {
                 if (appSettings[nameKey].ToString() != "")
@@ -368,7 +347,9 @@ namespace Custom_Countdown
             }
             #endregion
 
+            changeDateBtn.Visibility = Visibility.Visible;
 
+            CreateClockTask();
         }
         #endregion
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -426,10 +407,18 @@ namespace Custom_Countdown
                         yearComboBox.SelectedIndex = 7;
                         break;
                 }
-                //Clock.WinRT.ClockTileScheduler.SetGraduationDate(year, month, day); 
+                
             }
             #endregion
 
+        }
+
+        private void countdownNameTxtBox_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+
+            if (e.Key == Windows.System.VirtualKey.Enter)
+                saveDateBtn_Click(sender, e);
+                
         }
 
      

@@ -26,6 +26,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="140"/>
         </Grid.RowDefinitions>
 
         <UI:AdControl
@@ -44,14 +45,34 @@
 
 
 
-        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" >
+        <Grid Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Width="Auto" VerticalAlignment="Center" HorizontalAlignment="Left" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".3*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <ListBox Grid.Column="0" HorizontalAlignment="Left" Background="Transparent">
+                <ListBoxItem Foreground="White">Countdown 1</ListBoxItem>
+                <ListBoxItem Foreground="White">Countdown 2</ListBoxItem>
+                <ListBoxItem Foreground="White">Countdown 3</ListBoxItem>
+                <ListBoxItem Foreground="White">Countdown 4</ListBoxItem>
+            </ListBox>
+            
+            <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right">
+                <TextBlock x:Name="countdownTxtBlock" Grid.Column="1" TextWrapping="Wrap" FontSize="60" FontFamily="DilleniaUPC" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,0,0"/>
+                <TextBlock x:Name="untilTxtBlock" Grid.Column="1" Text="Until the big event!" TextWrapping="Wrap" FontSize="84" FontFamily="DilleniaUPC" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0"/>
+            </StackPanel>
+           
+            
+            
+        </Grid>
 
-            <TextBlock x:Name="countdownTxtBlock" TextWrapping="Wrap" FontSize="60" FontFamily="DilleniaUPC" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,0,0"/>
-            <TextBlock x:Name="untilTxtBlock" Text="Until the big event!" TextWrapping="Wrap" FontSize="84" FontFamily="DilleniaUPC" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0"/>
-            <Button x:Name="changeDateBtn" Style="{StaticResource CalendarAppBarButtonStyle}" Margin="8,14,8,14"  HorizontalAlignment="Center" VerticalAlignment="Bottom" BorderThickness="0" Foreground="White" Click="changeDateBtn_Click"/>
-
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Button x:Name="changeDateBtn" Style="{StaticResource SettingsAppBarButtonStyle}" Margin="8,14,8,14"  HorizontalAlignment="Center" VerticalAlignment="Bottom" BorderThickness="0" Foreground="White" Click="changeDateBtn_Click"/>
+            <!--<Button x:Name="addCountdownBtn" Style="{StaticResource AddAppBarButtonStyle}" Margin="8,14,8,14"  HorizontalAlignment="Center" VerticalAlignment="Bottom" BorderThickness="0" Foreground="White"/>-->
         </StackPanel>
-        <Popup x:Name="datePopUp" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="400" Height="Auto" Closed="datePopUp_Closed" Opened="datePopUp_Opened" Margin="0,230,0,0">
+        
+        <Popup x:Name="datePopUp" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="Visible" AllowDrop="False" HorizontalAlignment="Center"  VerticalAlignment="Top" Width="400" Height="Auto" Closed="datePopUp_Closed" Opened="datePopUp_Opened" Margin="0,230,0,0">
             <Grid x:Name="grid"  Width="400" Background="White">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="50"/>
@@ -140,7 +161,7 @@
 
                 <StackPanel x:Name="stackPanel5" Orientation="Vertical" Grid.Row="1" Grid.Column="0" Width="200" HorizontalAlignment="Left" Grid.ColumnSpan="3">
                     <TextBlock Text="Countdown name: " Margin="5,5,5,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" Foreground="Black"/>
-                    <TextBox x:Name="countdownNameTxtBox" Width="230" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,5,0" Grid.Column="1" Grid.ColumnSpan="1"/>
+                    <TextBox x:Name="countdownNameTxtBox" Width="230" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,5,0" Grid.Column="1" Grid.ColumnSpan="1" KeyDown="countdownNameTxtBox_KeyDown" />
                 </StackPanel>
                 <StackPanel x:Name="stackPanel" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.Row="2" Grid.ColumnSpan="3">
                     <Button x:Name="saveDateBtn" Content="Save" BorderThickness="0" Foreground="Black" Background="White" Margin="10,0,0,10" VerticalAlignment="Bottom" Click="saveDateBtn_Click" Grid.Row="1"/>
